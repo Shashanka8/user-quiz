@@ -22,11 +22,10 @@
       </div>
       <input type="submit" value="Sign In" />
     </form>
-
-    <!-- Error message -->
-    <div class="alert" *ngIf="serverErrorMessages">
-      {{ serverErrorMessages }}
-    </div>
   </div>
 
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessages">
+    {{ serverErrorMessages }}
+  </div>
 </ion-content>

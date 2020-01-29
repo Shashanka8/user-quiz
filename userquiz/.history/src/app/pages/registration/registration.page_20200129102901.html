@@ -30,16 +30,15 @@
       </div>
       <input type="submit" value="Sign Up" />
     </form>
-
-    <!-- Success message -->
-    <div class="success" *ngIf="showSucessMessage">
-      Saved successfully
-    </div>
-
-    <!-- Error message -->
-    <div class="alert" *ngIf="serverErrorMessages">
-      {{ serverErrorMessages }}
-    </div>
   </div>
 
+  <!-- Success message -->
+  <div class="success" *ngIf="showSucessMessage">
+    Saved successfully
+  </div>
+
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessages">
+    {{ serverErrorMessages }}
+  </div>
 </ion-content>
