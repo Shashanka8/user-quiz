@@ -1,5 +1,7 @@
 {
   "name": "userquiz",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
