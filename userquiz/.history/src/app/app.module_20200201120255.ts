@@ -17,12 +17,11 @@ import { AuthInterceptor } from "./auth/auth.interceptor";
 import { UserService } from './shared/user.service';
 import { QuizService } from './shared/quiz.service';
 import { ComponentsModule } from './components/components.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
     StatusBar,
     SplashScreen,

@@ -14,6 +14,10 @@ export class QuizPage implements OnInit {
   constructor(private quizService: QuizService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
+    this.quizService.getAllQuiz().subscribe((res) => {
+      console.log('Response Quiz--> ', res);
+      this.quizzes = JSON.stringify(res);
+    });
   }
   startQuiz() {
     this.router.navigateByUrl('/quiz-section/1');

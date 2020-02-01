@@ -21,15 +21,11 @@ const routes: Routes = [
   },
   {
     path: 'quiz',
-    loadChildren: () => import('./pages/quiz/quiz.module').then(m => m.QuizPageModule)
+    loadChildren: () => import('./pages/quiz/quiz.module').then( m => m.QuizPageModule)
   },
   {
     path: 'quiz-section',
-    loadChildren: () => import('./pages/quiz-section/quiz-section.module').then(m => m.QuizSectionPageModule)
-  },
-  {
-    path: 'quiz-section/:questionId',
-    loadChildren: () => import('./pages/quiz-section/quiz-section.module').then(m => m.QuizSectionPageModule)
+    loadChildren: () => import('./pages/quiz-section/quiz-section.module').then( m => m.QuizSectionPageModule)
   }
 ];
 
