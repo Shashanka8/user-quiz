@@ -6,6 +6,6 @@ const quizQuesContoroller = require('../controllers/quiz_questions.controller')
 
 router.get('/allquiz', quizQuesContoroller.getallquiz);
 router.get('/quizresultbyid/:userID/:quizID', quizController.getquizresultbyid);
-router.post('/createresultdetails', quizController.createquizresult);
+router.post('/createquizresult', quizController.createquizresult);
 
 module.exports = router;

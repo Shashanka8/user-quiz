@@ -1,8 +1,9 @@
-import { Component, OnInit,Output,Input,EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges } from '@angular/core';
 import { QuizQuestion } from '../../model/QuizQuestion';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { QuizService } from 'src/app/shared/quiz.service';
 
 
 
@@ -16,10 +17,13 @@ export class QuestionComponent implements OnInit {
   @Output() answer = new EventEmitter<string>();
   @Output() formGroup: FormGroup;
   @Input() question: QuizQuestion;
+  @Output() newVal;
   option = '';
   grayBorder = '2px solid #979797';
 
-  constructor() {}
+  constructor(public QuizServ:QuizService) { 
+    localStorage.setItem('ans', localStorage.getItem('ans'));
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -28,7 +32,7 @@ export class QuestionComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.question && changes.question.currentValue && !changes.question.firstChange) {
-      this.formGroup.patchValue({answer: ''});
+      this.formGroup.patchValue({ answer: '' });
     }
   }
 
@@ -64,16 +68,54 @@ export class QuestionComponent implements OnInit {
   }
 
   onSubmit() {
-    this.formGroup.reset({answer: null});
+    this.formGroup.reset({ answer: null });
   }
 
   arr = [];
   selectionText = [];
+  allans = [];
+  i=0;
   checkbox(val) {
+    this.allans = JSON.parse(localStorage.getItem('ans'));
     console.log('selected value cbox-> ', val);
-   this.arr.push(val);
-   this.selectionText=this.arr;
+    console.log('selected value checked-> ', event);
+    this.arr.push(val);
+    console.log("array of op->  ",this.arr);
+    // localStorage.setItem('ans', JSON.stringify(this.arr))
     console.log('Array--> ', this.arr);
-    console.log('selection Array--> ', this.selectionText);
+
   }
+  
+  ansobj = {};
+public myFunc() {
+  this.ansobj = {
+    lev: this.i,
+    data: this.arr
+  }
+  this.allans = [...this.allans, this.ansobj]
+  localStorage.setItem('ans', JSON.stringify(this.allans));
+ console.log('all answers--> ',this.allans)
+  this.i++;
+    // this.QuizServ.setData(this.allans);
+}
+
+newRes = {};
+  
+  public submitQuiz() {
+    this.myFunc();
+    this.newRes = {
+      userID:12345,
+      quizID:2,
+      results: this.allans
+    }
+    this.QuizServ.sendResults(this.newRes).subscribe((res)=>{
+      console.log("response sendres->  ", res);
+    },err => {
+      console.log(err);
+    })
+    // this.showConfirm('Confirmation !!!', '', 'Are you sure you want to submit Quiz?', '');
+  }
+
+
+
 }

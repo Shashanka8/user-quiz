@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, NavParams } from '@ionic/angular';
 import { QuizQuestion } from '../../model/QuizQuestion';
+import {QuizService} from '../../shared/quiz.service';
 
 
 
@@ -16,7 +17,9 @@ export class QuizSectionPage implements OnInit {
 
   @Input() answer: string;
   @Input() formGroup: FormGroup;
-  @Output() question: QuizQuestion;
+  @Output() question : QuizQuestion;
+  @Input() allans;
+  // @Input() alQuestions;
   totalQuestions: number;
   completionTime: number;
   correctAnswersCount = 0;
@@ -37,7 +40,9 @@ export class QuizSectionPage implements OnInit {
   elapsedTimes = [];
   blueBorder = '2px solid #007aff';
 
-  allQuestions: QuizQuestion[] = [
+  allQuestions: QuizQuestion[];
+
+  alQuestions: QuizQuestion[] = [
     {
       questionId: 1,
       questionText: 'What is the objective of dependency injection?',
@@ -96,21 +101,36 @@ export class QuizSectionPage implements OnInit {
     }
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router, public alertController: AlertController, public navcontroller: NavController) {
+
+  constructor(private route: ActivatedRoute,  public QuizeServ: QuizService, private router: Router, public alertController: AlertController, public navcontroller: NavController) {
+    this.QuizeServ.getAllQuiz().subscribe((res)=> {
+      console.log("response",res);
+      
+      this.allQuestions = res;
+      // localStorage.setItem('data',JSON.stringify(this.allQuestions));
+      console.log("All Questions ",this.allQuestions);
+         });
     this.route.paramMap.subscribe(params => {
+      console.log(params,"params");
       this.setQuestionID(+params.get('questionId'));  // get the question ID and store it
       this.question = this.getQuestion;
+      console.log("question", this.question);
+      console.log("answer",this.answer);
     });
   }
+
+  
 
   ngOnInit() {
     this.question = this.getQuestion;
     this.totalQuestions = this.allQuestions.length;
+    console.log("total Ques",this.totalQuestions);
     this.timeLeft = this.timePerQuestion;
     this.progressValue = 100 * (this.currentQuestion + 1) / this.totalQuestions;
     // this.countdown();
   }
-
+ 
+ 
   displayNextQuestion() {
     this.resetTimer();
     this.increaseProgressValue();
@@ -138,7 +158,8 @@ export class QuizSectionPage implements OnInit {
       this.navigateToResults();
     }
   } */
-
+  ansdata = [];
+  answe;
   navigateToNextQuestion(): void {
     console.log("clicked");
     if (this.question.selectedOption === '') {
@@ -146,6 +167,10 @@ export class QuizSectionPage implements OnInit {
     } else {
       this.router.navigate(['/quiz-section', this.getQuestionID() + 1]);
       this.displayNextQuestion();
+      // this.answe = localStorage.getItem('ans');
+      // console.log('answe ', this.answe)
+      // this.ansdata.push(this.answe);
+      // console.log('answer', this.ansdata);
     }
   }
 
@@ -162,6 +187,7 @@ export class QuizSectionPage implements OnInit {
         correctAnswersCount: this.correctAnswersCount,
         completionTime: this.completionTime,
         allQuestions: this.allQuestions,
+
       }
     });
   }
@@ -230,6 +256,7 @@ export class QuizSectionPage implements OnInit {
   }
 
   setQuestionID(id: number) {
+    console.log("qid",id);
     return this.questionID = id;
   }
 
@@ -245,7 +272,10 @@ export class QuizSectionPage implements OnInit {
     return this.question.selectedOption === this.question.answer;
   }
 
-  get getQuestion(): QuizQuestion {
+  get getQuestion():QuizQuestion {
+    this.allQuestions =this.QuizeServ.getData();
+    // this.allQuestions = JSON.parse(localStorage.getItem('data'));
+    console.log('getQues', this.allQuestions,"qid",this.questionID)
     return this.allQuestions.filter(
       question => question.questionId === this.questionID
     )[0];
@@ -295,8 +325,20 @@ export class QuizSectionPage implements OnInit {
     }
   }
 
+  newRes = {};
+  newVal=this.QuizeServ.getData();
   submitQuiz() {
-    this.showConfirm('Confirmation !!!', '', 'Are you sure you want to submit Quiz?', '');
+    this.newRes = {
+      userID:12345,
+      quizID:2,
+      results: this.newVal
+    }
+    this.QuizeServ.sendResults(this.newRes).subscribe((res)=>{
+      console.log("response sendres->  ", res);
+    },err => {
+      console.log(err);
+    })
+    // this.showConfirm('Confirmation !!!', '', 'Are you sure you want to submit Quiz?', '');
   }
 
   // alert box
@@ -328,6 +370,13 @@ export class QuizSectionPage implements OnInit {
         }, {
           text: 'Ok',
           handler: () => {
+            setTimeout(() => {
+              this.QuizeServ.sendResults({
+                userID:12345,
+                quizID:2,
+                results:localStorage.getItem('ans')
+              })
+            }, 10000);
             this.showAlert('Info', '', 'Quiz submitted');
             this.navcontroller.navigateForward('/quiz');
           }

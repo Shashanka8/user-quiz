@@ -7,6 +7,7 @@ import { User } from "./user.model";
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService {
 
   selectedUser: User = {

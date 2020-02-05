@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { QuizService } from 'src/app/shared/quiz.service';
+import { Component, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
+import {QuizService} from '../../shared/quiz.service';
 
 @Component({
   selector: 'app-quiz',
@@ -9,9 +9,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./quiz.page.scss'],
 })
 export class QuizPage implements OnInit {
-
-  quizzes;
-  constructor(private quizService: QuizService, private router: Router, public modalCtrl: ModalController) { }
+// @Output() alQuestions;
+  quizzes; 
+  allQuestions: any;
+  constructor(public QuizeServ: QuizService, private router: Router, public modalCtrl: ModalController) {
+    this.QuizeServ.getAllQuiz().subscribe((res)=> {
+      console.log("response",res);
+      this.allQuestions=res;
+      this.QuizeServ.setData(this.allQuestions);
+      // localStorage.setItem('data',JSON.stringify(this.allQuestions));
+      console.log("All Qustions ",this.allQuestions);
+    });
+    localStorage.setItem('ans', JSON.stringify([]));
+   }
 
   ngOnInit() {
   }

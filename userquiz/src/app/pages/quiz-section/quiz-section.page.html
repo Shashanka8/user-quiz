@@ -1,71 +1,72 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="quiz" class="backBtn"></ion-back-button>
-    </ion-buttons>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="quiz" class="backBtn"></ion-back-button>
+        </ion-buttons>
 
-    <ion-title class="titleTxt">quiz-section</ion-title>
-    <ion-buttons slot="end" class="visibleHidden">
-      <ion-back-button class="backBtn"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
+        <ion-title class="titleTxt">quiz-section</ion-title>
+        <ion-buttons slot="end" class="visibleHidden">
+            <ion-back-button class="backBtn"></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <!-- <div class="mat-card-container">
+    <ion-card>
+        <!-- <div class="mat-card-container">
             <ion-card-title>Dependency Injection Quiz</ion-card-title>
             <ion-card-subtitle>
                 Assess your knowledge of Dependency Injection
             </ion-card-subtitle>
         </div> -->
-    <ion-card-content>
-      <div class="scoreboard">
-        <div class="row">
-          <!-- <div class="score">
+        <ion-card-content>
+            <div class="scoreboard">
+                <div class="row">
+                    <!-- <div class="score">
                         <span class="leader">Score</span>
                         <span class="scoreboard">
               {{ correctAnswersCount }}/{{ totalQuestions }}
             </span>
                     </div> -->
-          <div class="questNum" *ngIf="question && question.questionId <= totalQuestions">
-            <span>Question {{ question.questionId }} of {{ totalQuestions }}</span>
-          </div>
-          <!-- <div class="time-left">
+                    <div class="questNum" *ngIf="question && question.questionId <= totalQuestions">
+                        <span>Question {{ question.questionId }} of {{ totalQuestions }}</span>
+                    </div>
+                    <!-- <div class="time-left">
                         <span class="leader">Time</span>
                         <span class="scoreboard">
                 0:<span *ngIf="timeLeft < 10">0</span>{{ timeLeft }}
                         </span>
                     </div> -->
-        </div>
-      </div>
+                </div>
+            </div>
 
-      <div class="questionBlock" id="question">{{ question.questionText }}</div>
-      <app-question [question]="question"></app-question>
-    </ion-card-content>
-  </ion-card>
+            <div class="questionBlock" id="question">{{ question.questionText }}</div>
+            <app-question #quizcomponent [question]="question"></app-question>
+        </ion-card-content>
+    </ion-card>
 
-  <!-- <div class="previousQuestionNav" *ngIf="question && question.questionId !== 1">
+    <!-- <div class="previousQuestionNav" *ngIf="question && question.questionId !== 1">
     <button type="button" (click)="navigateToPreviousQuestion()">
       &laquo; Previous
     </button>
   </div> -->
-  <div class="submit" *ngIf="question && question.questionId !== totalQuestions">
-    <button type="button" class="submitButton" (click)="navigateToNextQuestion()">
+
+    <div class="submit" *ngIf="question && question.questionId !== totalQuestions">
+        <button type="button" class="submitButton" (click)="navigateToNextQuestion();quizcomponent.myFunc()">
       Next &raquo;
     </button>
-  </div>
-  <div class="submit" *ngIf="question && question.questionId === totalQuestions">
-    <button type="button" class="submitButton" (click)="submitQuiz()">
+    </div>
+    <div class="submit" *ngIf="question && question.questionId === totalQuestions">
+        <button type="button" class="submitButton" (click)="quizcomponent.submitQuiz()">
       Submit Quiz
     </button>
-  </div>
-  <!-- <div class="showScoreNav" *ngIf="question && question.questionId === totalQuestions">
+    </div>
+    <!-- <div class="showScoreNav" *ngIf="question && question.questionId === totalQuestions">
             <button type="button" (click)="navigateToResults()">
       Show Your Score
     </button>
         </div> -->
-  <!-- <section class="progress-bar">
+    <!-- <section class="progress-bar">
       <ion-progress-bar *ngIf="(progressValue >= 0 && progressValue <= 100) &&
                               question && question.questionId <= totalQuestions"
                        type="success" [value]="progressValue">
